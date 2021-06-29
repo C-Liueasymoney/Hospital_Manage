@@ -6,6 +6,8 @@ import com.chong.hospital.model.cmn.Dict;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,11 +27,12 @@ public class DictController {
     @Autowired
     DictService dictService;
 
+
     @ApiOperation("根据数据id查询子数据列表")
     @GetMapping("/queryChildData/{id}")
     public Result<List<Dict>> queryChildData(@PathVariable("id") Long id){
         List<Dict> dicts = dictService.queryChildData(id);
-        return Result.ok(dicts);
+        return Result.ok(dicts);   //返回result会导致序列化问题
     }
 
 
@@ -42,8 +45,7 @@ public class DictController {
 
     @ApiOperation("导入Excel为数据字典")
     @PostMapping("/importData")
-    public Result importData(MultipartFile file){
+    public void importData(MultipartFile file){
         dictService.importData(file);
-        return Result.ok();
     }
 }
