@@ -1,0 +1,25 @@
+server:
+  port: 8202
+
+spring:
+  application:
+    name: service-cmn
+
+  profiles:
+    active: dev
+
+  datasource:
+    username: root
+    password: 7856915061
+    url: jdbc:mysql://127.0.0.1:3306/hospital_cmn?characterEncoding=utf8&useUnicode=true&useSSL=false&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+mybatis-plus:
+#  mapper-locations:
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl

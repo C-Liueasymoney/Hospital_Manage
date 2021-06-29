@@ -1,0 +1,31 @@
+# 服务端口
+server:
+  port: 8201
+
+# 服务名(SpringCloud相关)
+spring:
+  application:
+    name: service-hosp
+
+    # 环境设置：dev、test、prod
+  profiles:
+    active: dev
+#  config:
+#    activate:
+#      on-profile: dev
+
+      # mysql数据库连接
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/hospital?characterEncoding=utf8&useUnicode=true&useSSL=false&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 7856915061
+
+    #返回json的全局时间格式
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+#配置mapper xml文件的路径
+mybatis-plus:
+  mapper-locations: classpath:com/chong/hosp/mapper/xml/*.xml
