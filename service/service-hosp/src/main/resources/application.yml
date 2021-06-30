@@ -26,6 +26,12 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
 
+    # mongodb地址
+  data:
+    mongodb:
+      uri: mongodb://127.0.0.1:27017/service_hosp
+
 #配置mapper xml文件的路径
 mybatis-plus:
   mapper-locations: classpath:com/chong/hosp/mapper/xml/*.xml
+
