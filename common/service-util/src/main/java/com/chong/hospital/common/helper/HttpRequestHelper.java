@@ -19,8 +19,10 @@ public class HttpRequestHelper {
         paramMap.put("b", "2");
         paramMap.put("c", "3");
         paramMap.put("a", "1");
-        paramMap.put("timestamp", getTimestamp());
+//        paramMap.put("timestamp", getTimestamp());
+        paramMap.put("sign", "111111111");
         log.info(getSign(paramMap, "111111111"));
+//        log.info("" + isSignEquals(paramMap, getSign(paramMap, "111111111")));
     }
 
     /**
@@ -49,6 +51,8 @@ public class HttpRequestHelper {
         TreeMap<String, Object> sorted = new TreeMap<>(paramMap);
         StringBuilder str = new StringBuilder();
         for (Map.Entry<String, Object> param : sorted.entrySet()) {
+            if ("logoData".equals(param.getKey()))     // 由于logoData图片转换在传输的过程中比较坑，这里不用它生成密钥了
+                continue;
             str.append(param.getValue()).append("|");
         }
         str.append(signKey);

@@ -20,6 +20,6 @@ public class HospitalSetServiceImpl extends ServiceImpl<HospitalSetMapper, Hospi
         QueryWrapper<HospitalSet> wrapper = new QueryWrapper<>();
         wrapper.eq("hoscode", hoscode);
         HospitalSet hospitalSet = baseMapper.selectOne(wrapper);
-        return null;
+        return hospitalSet.getSignKey();
     }
 }

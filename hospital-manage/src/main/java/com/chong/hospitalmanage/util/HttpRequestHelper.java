@@ -47,6 +47,8 @@ public class HttpRequestHelper {
         TreeMap<String, Object> sorted = new TreeMap<>(paramMap);
         StringBuilder str = new StringBuilder();
         for (Map.Entry<String, Object> param : sorted.entrySet()) {
+            if ("logoData".equals(param.getKey()))
+                continue;
             str.append(param.getValue()).append("|");
         }
         str.append(signKey);
