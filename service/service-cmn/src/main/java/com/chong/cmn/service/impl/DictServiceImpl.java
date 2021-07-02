@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description:
@@ -95,5 +97,26 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    @Cacheable(cacheNames = "dict", keyGenerator = "keyGenerator")
+    public String getNameByParentDictCodeAndValue(String parentDictCode, String value) {
+        //如果value能唯一定位数据字典，parentDictCode可以传空，例如：省市区的value值能够唯一确定
+        if (StringUtils.isEmpty(parentDictCode)){
+            Dict dict = baseMapper.selectOne(new QueryWrapper<Dict>().eq("value", value));
+            if (dict != null){
+                return dict.getName();
+            }
+        }else {
+            //TODO 这里可以写一个复合查询的mapper替换
+            Dict codeDict = baseMapper.selectOne(new QueryWrapper<Dict>().eq("dict_code", parentDictCode));
+            Long parentId = codeDict.getId();
+            // 根据parentId和value进行查询
+            Dict resDict = baseMapper.selectOne(new QueryWrapper<Dict>().eq("parent_id", parentId)
+                    .eq("value", value));
+            return resDict.getName();
+        }
+        return null;
     }
 }

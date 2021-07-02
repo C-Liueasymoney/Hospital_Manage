@@ -4,7 +4,9 @@ import com.chong.cmn.service.DictService;
 import com.chong.hospital.common.result.Result;
 import com.chong.hospital.model.cmn.Dict;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -47,5 +49,21 @@ public class DictController {
     @PostMapping("/importData")
     public void importData(MultipartFile file){
         dictService.importData(file);
+    }
+
+
+    @ApiOperation("根据字典码和值获取数据字典名称")
+    @GetMapping("/getName/{parentDictCode}/{value}")
+    public Result<String> getName(@ApiParam(name = "parentDictCode", value = "上级编码", required = true) @PathVariable("parentDictCode") String parentDictCode,
+                                  @ApiParam(name = "value", value = "数据值", required = true) @PathVariable("value") String value){
+
+        return Result.ok(dictService.getNameByParentDictCodeAndValue(parentDictCode, value));
+    }
+
+    @ApiOperation("根据值获取数据字典名称")
+    @GetMapping("/getName/{value}")
+    public Result<String> getName(@ApiParam(name = "value", value = "数据值", required = true) @PathVariable("value") String value){
+
+        return Result.ok(dictService.getNameByParentDictCodeAndValue("", value));
     }
 }

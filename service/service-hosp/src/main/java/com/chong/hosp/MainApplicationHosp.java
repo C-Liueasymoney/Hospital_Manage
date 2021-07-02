@@ -3,6 +3,7 @@ package com.chong.hosp;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 //@MapperScan("com.chong.hosp.mapper")
 @SpringBootApplication
 @ComponentScan(basePackages = "com.chong")
+@EnableDiscoveryClient   // nacos服务注册
 public class MainApplicationHosp {
     public static void main(String[] args) {
         SpringApplication.run(MainApplicationHosp.class, args);

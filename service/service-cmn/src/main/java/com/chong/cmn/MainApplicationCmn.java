@@ -2,6 +2,7 @@ package com.chong.cmn;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @SpringBootApplication
 @ComponentScan("com.chong")  // 主要为了扫描其他模块的配置类
+@EnableDiscoveryClient
 public class MainApplicationCmn {
     public static void main(String[] args) {
         SpringApplication.run(MainApplicationCmn.class, args);

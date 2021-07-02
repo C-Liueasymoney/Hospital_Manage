@@ -31,6 +31,11 @@ spring:
         max-wait: -1
         max-active: 20
 
+        # nacos服务注册
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
 
 mybatis-plus:
 #  mapper-locations:

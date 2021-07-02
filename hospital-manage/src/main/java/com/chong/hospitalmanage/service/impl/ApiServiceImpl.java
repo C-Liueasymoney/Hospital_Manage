@@ -119,7 +119,7 @@ public class ApiServiceImpl implements ApiService {
 
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("hoscode", this.getHoscode());
-        //paramMap.put("depcode",depcode);
+//        paramMap.put("depcode",depcode);
         paramMap.put("page", pageNum);
         paramMap.put("limit", pageSize);
         paramMap.put("timestamp", HttpRequestHelper.getTimestamp());
@@ -274,6 +274,14 @@ public class ApiServiceImpl implements ApiService {
 
     @Override
     public boolean removeSchedule(String hosScheduleId) {
+
+        // 同步删除医院数据库的数据（可选）暂时做不了，数据库里没hosScheduleId这个字段，后面再说吧
+
+//        Schedule targetSchedule = scheduleMapper.selectById(Long.parseLong(hosScheduleId));
+//        if (targetSchedule != null){
+//            scheduleMapper.deleteById(targetSchedule.get);
+//        }
+
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("hoscode", this.getHoscode());
         paramMap.put("hosScheduleId", hosScheduleId);

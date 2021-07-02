@@ -31,7 +31,15 @@ spring:
     mongodb:
       uri: mongodb://127.0.0.1:27017/service_hosp
 
+
+  # nacos服务地址
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+
 #配置mapper xml文件的路径
 mybatis-plus:
   mapper-locations: classpath:com/chong/hosp/mapper/xml/*.xml
+
 
