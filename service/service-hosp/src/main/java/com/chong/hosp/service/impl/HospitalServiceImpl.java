@@ -1,8 +1,11 @@
 package com.chong.hosp.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.chong.cmn.client.DictFeignClient;
 import com.chong.hosp.repository.HospitalRepository;
 import com.chong.hosp.service.HospitalService;
+import com.chong.hospital.common.result.Result;
+import com.chong.hospital.enums.DictEnum;
 import com.chong.hospital.model.hosp.Hospital;
 import com.chong.hospital.vo.hosp.HospitalQueryVo;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +15,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,6 +28,9 @@ import java.util.Map;
 public class HospitalServiceImpl implements HospitalService {
     @Autowired
     HospitalRepository hospitalRepository;
+
+    @Autowired
+    DictFeignClient dictFeignClient;
 
     @Override
     public void save(Map<String, Object> paramMap) {
@@ -78,6 +85,38 @@ public class HospitalServiceImpl implements HospitalService {
 
         Example<Hospital> example = Example.of(hospital, matcher);
         Page<Hospital> pages = hospitalRepository.findAll(example, pageRequest);
+
+        // 通过服务调用获取信息, pages.getContent()得到pages里面的数据集合List<Hospital>
+        List<Hospital> content = pages.getContent();   // 利用里面的param（BaseMongoEntity中属性）封装其医院登记（原本的字段中不存在）
+
+        // lambda表达式，就是把content中保存的所有hospital信息依次传入packHospital函数中处理
+        content.stream().forEach(item -> {
+            this.packHospital(item);
+        });
+
         return pages;
+    }
+
+    /**
+     * 封装数据
+     * @param hospital
+     * @return
+     */
+    private Hospital packHospital(Hospital hospital){
+        //TODO 这个部分的调用过程以及数据表中的字段对应需要好好总结
+        Result<String> hostypeResult = dictFeignClient.getName(DictEnum.HOSTYPE.getDictCode(), hospital.getHostype());
+        String hostypeString = hostypeResult.getData();
+
+        String provinceString = dictFeignClient.getName(hospital.getProvinceCode()).getData();
+
+        String cityString = dictFeignClient.getName(hospital.getCityCode()).getData();
+
+        String districtString = dictFeignClient.getName(hospital.getDistrictCode()).getData();
+
+        // 这里往其他参数param中添加保存
+        hospital.getParam().put("hostypeString", hostypeString);
+        hospital.getParam().put("fullAddress", provinceString + cityString + districtString + hospital.getAddress());
+
+        return hospital;
     }
 }
