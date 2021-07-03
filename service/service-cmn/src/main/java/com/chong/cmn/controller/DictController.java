@@ -66,4 +66,15 @@ public class DictController {
 
         return Result.ok(dictService.getNameByParentDictCodeAndValue("", value));
     }
+
+
+    @ApiOperation("根据dictcode获取对应的下级节点")
+    @GetMapping("queryByDictCode/{dictCode}")
+    public Result<List<Dict>> queryByDictCode(
+            @ApiParam(name = "dictCode", value = "节点编码", required = true)
+            @PathVariable("dictCode") String dictCode){
+
+        return Result.ok(dictService.queryByDictCode(dictCode));
+    }
+
 }

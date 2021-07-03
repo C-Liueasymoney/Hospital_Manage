@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * <p>
  * Hospital
  * </p>
- *
+ *对应mongodb数据库中hospital
  * @author qy
  */
 @Data

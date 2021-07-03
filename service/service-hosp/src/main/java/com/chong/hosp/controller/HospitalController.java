@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * @Description:
  * @Author: chong
@@ -33,4 +35,26 @@ public class HospitalController {
 
         return Result.ok(hospitalService.selectPage(page, limit, hospitalQueryVo));
     }
+
+
+    @ApiOperation("更新医院上线状态")
+    @PutMapping("/updateStatus/{id}/{status}")
+    public Result updateStatus(@ApiParam(name = "id", value = "医院id", required = true)
+                               @PathVariable("id") String id,
+                               @ApiParam(name = "status", value = "医院上线状态", required = true)
+                               @PathVariable("status") Integer status){
+
+        hospitalService.updateStatus(id, status);
+        return Result.ok();
+    }
+
+
+    @ApiOperation("获取单个医院详情")
+    @GetMapping("/showHospDetail/{id}")
+    public Result<Map<String, Object>> showHospital(@ApiParam(name = "id", value = "医院id", required = true)
+                               @PathVariable("id") String id){
+
+        return Result.ok(hospitalService.showHospital(id));
+    }
+
 }

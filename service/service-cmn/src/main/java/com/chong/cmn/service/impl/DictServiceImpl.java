@@ -119,4 +119,13 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
         }
         return null;
     }
+
+
+    @Override
+    public List<Dict> queryByDictCode(String dictCode) {
+        Dict dict = baseMapper.selectOne(new QueryWrapper<Dict>().eq("dict_code", dictCode));
+        if (dict == null)
+            return null;
+        return this.queryChildData(dict.getId());
+    }
 }

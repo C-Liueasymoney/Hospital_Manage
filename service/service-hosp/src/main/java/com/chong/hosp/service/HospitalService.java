@@ -17,4 +17,11 @@ public interface HospitalService {
     Hospital getByHoscode(String hoscode);
 
     Page<Hospital> selectPage(Integer page, Integer limit, HospitalQueryVo hospitalQueryVo);
+
+    void updateStatus(String id, Integer status);
+
+    Map<String, Object> showHospital(String id);
+
+    // 根据医院编号获取医院名称
+    String getHospName(String hoscode);
 }
