@@ -1,6 +1,7 @@
 package com.chong.hospital.common.exception;
 
 import com.chong.hospital.common.result.Result;
+import com.chong.hospital.common.result.ResultCodeEnum;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,5 +27,10 @@ public class GlobalExceptionHandler {
     public Result nullHospSetIdExceptionHandler(NullHospSetIdException e){
 //        e.printStackTrace();
         return Result.null_hospital();
+    }
+
+    @ExceptionHandler(UserException.class)
+    public Result userException(UserException e){
+        return Result.fail().message(e.getMessage());
     }
 }

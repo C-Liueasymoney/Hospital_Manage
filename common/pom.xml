@@ -58,6 +58,12 @@
             <artifactId>joda-time</artifactId>
         </dependency>
 
+<!--        JWT依赖-->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

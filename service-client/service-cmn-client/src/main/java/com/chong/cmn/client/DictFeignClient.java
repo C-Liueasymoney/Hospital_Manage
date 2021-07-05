@@ -17,12 +17,12 @@ public interface DictFeignClient {
 
     @ApiOperation("根据字典码和值获取数据字典名称")
     @GetMapping("/admin/cmn/dict/getName/{parentDictCode}/{value}")
-    public Result<String> getName(@ApiParam(name = "parentDictCode", value = "上级编码", required = true) @PathVariable("parentDictCode") String parentDictCode,
+    Result<String> getName(@ApiParam(name = "parentDictCode", value = "上级编码", required = true) @PathVariable("parentDictCode") String parentDictCode,
                                   @ApiParam(name = "value", value = "数据值", required = true) @PathVariable("value") String value);
 
 
 
     @ApiOperation("根据值获取数据字典名称")
     @GetMapping("/admin/cmn/dict/getName/{value}")
-    public Result<String> getName(@ApiParam(name = "value", value = "数据值", required = true) @PathVariable("value") String value);
+    Result<String> getName(@ApiParam(name = "value", value = "数据值", required = true) @PathVariable("value") String value);
 }
