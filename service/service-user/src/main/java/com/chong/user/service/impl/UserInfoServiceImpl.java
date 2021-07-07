@@ -6,8 +6,10 @@ import com.chong.hospital.common.exception.UserException;
 import com.chong.hospital.common.result.ResultCodeEnum;
 import com.chong.hospital.common.util.JwtHelper;
 import com.chong.hospital.model.user.UserInfo;
+import com.chong.hospital.model.user.UserLoginRecord;
 import com.chong.hospital.vo.user.LoginVo;
 import com.chong.user.mapper.UserInfoMapper;
+import com.chong.user.mapper.UserLoginRecordMapper;
 import com.chong.user.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -26,6 +28,8 @@ import java.util.Map;
 public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> implements UserInfoService {
     @Autowired
     RedisTemplate<String, String> redisTemplate;
+    @Autowired
+    UserLoginRecordMapper userLoginRecordMapper;
 
     @Override
     public Map<String, Object> login(LoginVo loginVo) {
@@ -42,17 +46,31 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
             throw new UserException(ResultCodeEnum.CODE_ERROR);
         }
 
+        // 绑定手机号
+        UserInfo userInfo = null;
+        if (!StringUtils.isEmpty(loginVo.getOpenid())){
+            userInfo = this.getByOpenid(loginVo.getOpenid());
+        }
+        if (userInfo != null) {
+            userInfo.setPhone(loginVo.getPhone());
+            this.updateById(userInfo);
+        }
 
-        QueryWrapper<UserInfo> wrapper = new QueryWrapper<>();
-        wrapper.eq("phone", phoneNumber);
-        // 检查手机号是否已经注册
-        UserInfo userInfo = baseMapper.selectOne(wrapper);
-        if (userInfo == null){   // 如果为空，新创建一个用户信息
-            userInfo = new UserInfo();
-            userInfo.setPhone(phoneNumber);
-            userInfo.setName("");
-            userInfo.setStatus(1);
-            baseMapper.insert(userInfo);
+
+
+        // userinfo==null，说明用手机登录
+        if (userInfo == null) {
+            QueryWrapper<UserInfo> wrapper = new QueryWrapper<>();
+            wrapper.eq("phone", phoneNumber);
+            // 检查手机号是否已经注册
+            userInfo = baseMapper.selectOne(wrapper);
+            if (userInfo == null) {   // 如果为空，新创建一个用户信息
+                userInfo = new UserInfo();
+                userInfo.setPhone(phoneNumber);
+                userInfo.setName("");
+                userInfo.setStatus(1);
+                baseMapper.insert(userInfo);
+            }
         }
 
         // 校验用户状态是否被禁用
@@ -61,6 +79,10 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         }
 
         //TODO 记录登录
+        UserLoginRecord userLoginRecord = new UserLoginRecord();
+        userLoginRecord.setUserId(userInfo.getId());
+        userLoginRecord.setIp(loginVo.getIp());
+        userLoginRecordMapper.insert(userLoginRecord);
 
         //返回页面显示名称
         Map<String, Object> result = new HashMap<>();
@@ -77,5 +99,11 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         // TODO token生成
         result.put("token", JwtHelper.createToken(userInfo.getId(), userName));
         return result;
+    }
+
+
+    @Override
+    public UserInfo getByOpenid(String openid) {
+        return baseMapper.selectOne(new QueryWrapper<UserInfo>().eq("openid", openid));
     }
 }
